@@ -1,6 +1,7 @@
 #########################################################################################
 #######################################################################################
 ## Written by: Meghan Blumstein (blumsteinm@gmail.com)
+## Cat and Dave
 ##
 ## Date written: 09/11/17
 ##
@@ -184,7 +185,7 @@ print(sd(height_diff)) # 0.418 vs. exact -> 0.4
 hist(height_diff)
 
 
-### Cat's version
+### Dave's version
 #4.5: 4
 difVect <- vector()
 for (i in 1:1000){
