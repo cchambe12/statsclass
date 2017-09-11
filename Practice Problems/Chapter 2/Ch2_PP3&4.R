@@ -27,6 +27,9 @@ ggplot(d, aes(x=dist, y=arsenic)) + geom_point(aes(color=as.factor(switch)))
 ggplot(d, aes(x=dist, y=arsenic, color=as.factor(switch))) + geom_point(alpha=1/5) +
   geom_smooth(method=lm)
 
+ggplot(d, aes(x=dist, y=arsenic, color=as.factor(switch))) +
+  geom_smooth(method=lm)
+
 dev.new()
 mod<-lm(arsenic~dist, data=d, subset=d$switch==1)
 mod2<-lm(arsenic~dist, data=d, subset=d$switch==0)
