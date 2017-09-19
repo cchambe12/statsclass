@@ -21,6 +21,8 @@ d<- read.dta("child.iq/child.iq.dta")
 ## 3.4: part A
 mod<-lm(ppvt~momage, data=d)
 display(mod)
+plot(d$momage, d$ppvt)
+abline(coef(mod)[1], coef(mod)[2])
 # Model output
 #lm(formula = ppvt ~ momage, data = d)
 #coef.est coef.se
@@ -50,3 +52,27 @@ display(mod2)
 ## According to the model, mother's education is a greater predictor than mother's age at birth.
 # The residual sd is high again and the r-squared value is low again but the mother's education predictor
 # is significant. Yes, conclusions about timing of birth have changed. 
+
+# 3.4: part C
+d$hs<-ifelse(d$educ_cat==1, 0, 1)
+mod3<- lm(ppvt~momage + hs, data=d)
+mod4<-lm(ppvt~momage*hs, data=d)
+display(mod3);display(mod4)
+
+ggplot(d, aes(y=ppvt, x=momage)) + geom_point(aes(color=as.factor(hs))) + geom_smooth(aes(color=hs), method="lm")
+
+# 3.4: part D - I don't know why they are so different... definitely messing something up...
+d.sub<-d[1:200,]
+plot(d.sub$momage, d.sub$ppvt)
+abline(coef(mod2)[1], coef(mod3)[2])
+d.pred<-predict(mod3, d.sub)
+d.actual<-d[201:400,]
+
+plot(d.pred,d.sub$ppvt, xlab="Predicted score", ylab="Actual score",col="darkgrey", mgp=c(2,.5,0), pch=20, cex=1)
+curve(1*x, add=T)
+
+
+
+
+
+
