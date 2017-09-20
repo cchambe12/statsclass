@@ -8,7 +8,7 @@
 #   iq.data <- read.dta ("child.iq.dta")
 #   
 #   (a) Fit a regression of child test scores on mother’s age, display the data and fitted model, check assumptions, and interpret the slope coefficient. When do you recommend mothers should give birth? What are you assuming in making these recommendations?
-#   (b) Repeat this for a regression that further includes mother’s education, inter- preting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
+#   (b) Repeat this for a regression that further includes mother’s education, inter-preting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
 #   (c) Now create an indicator variable reflecting whether the mother has completed high school or not. Consider interactions between the high school completion and mother’s age in family. Also, create a plot that shows the separate regres- sion lines for each high school completion status group.
 #   (d) Finally, fit a regression of child test scores on mother’s age and education level for the first 200 children and use this model to predict test scores for the next 200. Graphically display comparisons of the predicted and actual scores for the final 200 children.
 #   
@@ -36,15 +36,15 @@ par(mfrow = c(2,2))
 m1 <- lm(ppvt ~ momage)
 
 ## Plot Data and Model Fit
-plot(ppvt ~ momage, col = "gray50", pch = 16)
+plot(ppvt ~ momage, col = "gray50", pch = 16, ylab = "Child IQ", xlab = "Mom's Age")
 abline(a = coefficients(m1)[1], b = coefficients(m1)[2], main = "Child's IQ vs. Mom's Age")
 
 ## Check Assumptions of Model
-hist(ppvt, col = kid_col, border = "white", main = "Child's IQ")
-hist(momage, col = mom_col, border = "white", main = "Mom's Age")
+hist(ppvt, col = kid_col, border = "white", xlab = "Child's IQ", xlim = c(15, 140), main = "")
+hist(momage, col = mom_col, border = "white", xlab = "Mom's Age", xlim = c(15, 30), main = "")
 
 
-## The Slope coeefficeint is ~0.8, suggesting that, given two children, the one with the mother that is 1 year older is on average likely
+## The Slope coefficeint is ~0.8, suggesting that, given two children, the one with the mother that is 1 year older is on average likely
 ## to have an IQ that is 0.8 points higher. Based on the model alone, you would suggest that the older a mother is, the higher her child's
 ## IQ will be. However, the model is not a very good one. The residual SE is 20.34, so the model can predict Child's 
 ## IQ to within an accuracy of 20.34 IQ Points, with a R-squared of .009 - indicating that 
@@ -59,8 +59,10 @@ par(mfrow = c(2,2))
 m2 <- lm(ppvt ~ momage + educ_cat)
 
 ## Plot Data and Model Fit
-plot(ppvt ~ educ_cat, col = "gray50", pch = 16)
+boxplot(ppvt ~ as.factor(educ_cat), col = kid_col, xlab = "Educational Category", ylab = "Child IQ", pch = 16)
+plot(ppvt ~ educ_cat, col = colorRampPalette(c("gray90", "gray10"))(7)[as.factor(momage)], pch = 16)
 abline(a = coefficients(m2)[1], b = coefficients(m2)[2], main = "Child's IQ vs. Mom's Age + Education Level")
+legend("bottomright", bty = "n", "*Age light --> Dark")
 
 ## Check Assumptions of Model
 hist(ppvt, col = kid_col, border = "white", main = "Child's IQ")
@@ -85,7 +87,7 @@ boxplot(ppvt ~ mom_hs, col = kid_col, names = c("Didn't Attend \n HS", "Attended
 # Consider interactions between the high school completion and mother’s age in family. Also, create a p
 # lot that shows the separate regression lines for each high school completion status group
 
-par(mfrow = c(2,2))
+par(mfrow = c(1,1))
 detach(kidiq)
 kidiq$mom_hs <- kidiq$educ_cat
 kidiq$mom_hs[kidiq$mom_hs < 2] <- 0
@@ -97,13 +99,14 @@ attach(kidiq)
 m3 <- lm(ppvt ~ as.factor(mom_hs) + momage)
 
 ## Plot Data and Model Fit
-plot(ppvt ~ momage, col = "gray50", pch = 16, main = "Child's IQ vs. Mom's Age")
-abline(a = coefficients(m3)[1], b = coefficients(m3)[2], lwd = 3, col = "coral")
-abline(a = coefficients(m3)[1], b = coefficients(m3)[3], lwd = 3, col = "forestgreen")
+plot(ppvt ~ momage, col = colorRampPalette(c("gray80", "gray30"))(2)[as.factor(mom_hs)], pch = 16, main = "Child's IQ vs. Mom's Age", 
+     ylab = "Child IQ", xlab = "Mom's Age")
+legend("topright", c("No HS", "HS"), col = c("gray80", "gray30"), pch = 16)
+legend("bottomright", c("HS Fit", "No HS Fit"), lwd = 3, col = c("forestgreen", "coral"))
+abline(a = coefficients(m3)[1] , b = coefficients(m3)[3], lwd = 3, col = "coral")
+abline(a = coefficients(m3)[1] + coef(m3)[2], b = coefficients(m3)[3], lwd = 3, col = "forestgreen")
 
-## Plot of educational category with separate lines
-m4 <- lm(ppvt ~ as.factor(educ_cat))
-plot(ppvt ~ educ_cat, col = "gray50", pch = 16, main = "Child's IQ vs. Mom's Age")
+
 
 detach(kidiq)
 ########################
@@ -113,53 +116,18 @@ detach(kidiq)
 # Finally, fit a regression of child test scores on mother’s age and education level f
 # or the first 200 children and use this model to predict test scores for the next 200. 
 # Graphically display comparisons of the predicted and actual scores for the final 200 children.
+
+## Split data frame into first 200 children and last 200 children
 f200 <- kidiq[1:200,]
 l200 <- kidiq[201:400,]
-m5 <- lm(f200$ppvt ~ f200$momage + f200$educ_cat)
 
-IQ_predicted <- coefficients(m5)[1] + coefficients(m5)[2] * l200$momage + coefficients(m5)[3] * l200$educ_cat
+## Create regression with first 200
+m4 <- lm(f200$ppvt ~ f200$momage + f200$educ_cat)
 
-plot(IQ_predicted ~ f200$ppvt, pch = 16, xlim = c(20, 120), ylim = c(20, 120), col = kid_col, ylab = "Predicted IQ", xlab = "First 200 IQ")
+## Predict IQ using the last 200 children and the model built on the first 200
+IQ_predicted <- coefficients(m4)[1] + coefficients(m4)[2] * l200$momage + coefficients(m4)[3] * l200$educ_cat
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Display data
+plot(IQ_predicted ~ f200$ppvt, pch = 16, xlim = c(20, 120), ylim = c(20, 120), col = mom_col, ylab = "Predicted IQ", xlab = "First 200 IQ", 
+     main = "Child's IQ vs. Mother's Age \n & Education Level")
 
