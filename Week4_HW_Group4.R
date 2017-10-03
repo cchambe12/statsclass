@@ -55,9 +55,10 @@ table(signif.count$signif)
 log(10) - (2*log(50))
 # intercept is -5.522
 # log(weight) = -5.522 + 2*log(height) + error
-# 1 Standard deviation is 0.55
-# ~ 95% of people -exp(0.55) = -1.73 and exp(0.55) = 1.733
-r_sq<-1-((0.055^2)/(.2^2))
-# r_sq is 0.924
+# Factor of 1.1 means that 95% of the animal weights on upper bound would fall within 10% of the expected value
+# therefore, the residual standard deviation would have that, which is 5% or 0.05
+## 
+r_sq<-1-((0.05^2)/(.2^2))
+# r_sq is 0.9375
 
 
