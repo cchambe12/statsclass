@@ -65,10 +65,10 @@ display(fit_2)
 #residual deviance = 806.8, null deviance = 1638.3 (difference = 831.5)
 
 ## fit_2 does include the interaction. Gender still does not have a big effect size, however, race now 
-# has a larger effect and eduction did not really change. The interaction of party affiliation and
-# political ideology has the greatest effect size, which seems accurate. If we apply the
-# "divide by 4" rule, then the interaction term suggests that for each jump towards conservatism, given 
-# more republican ideologies, voters were 4.5% more likely to vote for Bush 
+# has a larger effect and eduction did not really change. Gender and education have large standard errors.
+#The interaction of party affiliation and political ideology has the greatest effect size, 
+#which seems accurate. If we apply the "divide by 4" rule, then the interaction term suggests that
+#for each jump towards conservatism, givenmore republican ideologies, voters were 4.5% more likely to vote for Bush 
 
 fit_3<-glm(vote~female+white+educ+party*ideo, family=binomial(link="logit"), data=df)
 display(fit_3)
