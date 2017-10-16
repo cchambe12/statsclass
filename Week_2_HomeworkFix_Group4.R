@@ -1,42 +1,18 @@
-#######################################################################################
-#######################################################################################
-## Written by: Cat Chamberlain, Dave Matthews, & Meghan Blumstein 
-##
-## Date written: 09/19/2017
-##
-## Description: Week 2 Homework
-##
-## (ARM 3.9: #4)
-##   The child.iq folder contains a subset of the children and mother data
-##  discussed earlier in the chapter. You have access to children’s test scores at age 3, mother’s education, and the mother’s age at the time she
-##  gave birth for a sample of 400 children. The data are a Stata file which you can read into R by saving in your working directory and then typing
-## the following:
-## 
-##   library ("foreign")
-##   iq.data <- read.dta ("child.iq.dta")
-## 
-##   (a) Fit a regression of child test scores on mother’s age, display the data and fitted model, check assumptions, and interpret the slope coefficient. When do you recommend mothers should give birth? What are you assuming in making these recommendations?
-##   (b) Repeat this for a regression that further includes mother’s education, inter-preting both slope coefficients in this model. Have your conclusions about the timing of birth changed?
-##   (c) Now create an indicator variable reflecting whether the mother has completed high school or not. Consider interactions between the high school completion and mother’s age in family. Also, create a plot that shows the separate regres- sion lines for each high school completion status group.
-##   (d) Finally, fit a regression of child test scores on mother’s age and education level for the first 200 children and use this model to predict test scores for the next 200. Graphically display comparisons of the predicted and actual scores for the final 200 children.
-## 
-##   As a bonus you can do #2 from ROS chapter 7 (I recommend on your own, but in your group is fine too).
-
-#######################################################################################
-#######################################################################################
+## Homework Week 2 - adjustments post feedback from Lizzie
+# Group 4: Meghan Blumstein, Cat Chamberlain, and Dave Matthews
 
 ## Set working directories and load necessary packages
 require(foreign)
-wd <- "/Users/Meghs/Documents/GitHub/statsclass/ARM_Data/child.iq/"
-setwd(wd)
+#wd <- "/Users/Meghs/Documents/BioStats/"
+setwd("~/Documents/git/statsclass")
+#setwd(wd)
 
 ## Plotting Colors
 kid_col <- rgb(238, 211, 99, alpha = 100, max = 255)
 mom_col <- rgb(161, 205, 202, alpha = 100, max = 255)
 
 ## Load Requisite Data
-kidiq <- read.dta("child.iq.dta")
-attach(kidiq)
+kidiq <- read.dta("ARM_Data/child.iq/child.iq.dta")
 
 ########################
 ## Part (a)
@@ -93,17 +69,10 @@ boxplot(ppvt ~ mom_hs, col = kid_col, names = c("Didn't Attend \n HS", "Attended
 ########################
 ## Part (c)
 ########################
-
-# Now create an indicator variable reflecting whether the mother has completed high school or not. 
-# Consider interactions between the high school completion and mother’s age in family. Also, create a p
-# lot that shows the separate regression lines for each high school completion status group
-
 par(mfrow = c(1,1))
-detach(kidiq)
 kidiq$mom_hs <- kidiq$educ_cat
 kidiq$mom_hs[kidiq$mom_hs < 2] <- 0
 kidiq$mom_hs[kidiq$mom_hs != 0] <- 1
-attach(kidiq)
 
 
 ## Linear regression of child iq vs. highschool (1) or not (2,3,4)
@@ -117,16 +86,9 @@ legend("bottomright", c("HS Fit", "No HS Fit"), lwd = 3, col = c("forestgreen", 
 abline(a = coefficients(m3)[1] , b = coefficients(m3)[3], lwd = 3, col = "coral")
 abline(a = coefficients(m3)[1] + coef(m3)[2], b = coefficients(m3)[3], lwd = 3, col = "forestgreen")
 
-
-
-detach(kidiq)
 ########################
 ## Part (d)
 ########################
-
-# Finally, fit a regression of child test scores on mother’s age and education level f
-# or the first 200 children and use this model to predict test scores for the next 200. 
-# Graphically display comparisons of the predicted and actual scores for the final 200 children.
 
 ## Split data frame into first 200 children and last 200 children
 f200 <- kidiq[1:200,]
