@@ -31,7 +31,7 @@ full_data <- read.dta("kidiq.dta")
 doses <- c(1, 100, 10000)
 responses <- (doses * .01)/100
 plot(responses ~ doses , pch = 16, ylab = ("Response - P(Dying|Dosage)"))
-abline(a = 0, b = 0.01, col = "cornflowerblue")
+abline(a = 0, b = 0.01/100, col = "cornflowerblue")
 
 # dose = 1
 p <- responses[1]
