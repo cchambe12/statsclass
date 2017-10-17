@@ -51,7 +51,7 @@ for (i in 1:length(ntot)){
   
   fake <- data.frame(dp=dp, sunny=sunny)  
 }
-hist(fake$dp[sunny==1])        
+hist(fake$dp)        
 mean(fake$dp) # 48.3
 sd(fake$dp) # 4.72
 display(lm(dp~sunny, data=fake))
@@ -154,4 +154,21 @@ sample<- qplot(sunny.s, dp.s, data = fake.s, geom="boxplot", color=sunny.s) +
 
 grid.arrange(base, effect, sample, ncol=3, nrow=1)
 
-        
+
+fake$child<- as.numeric(sample(1000))
+fake.e$child<-as.numeric(sample(1000))
+fake.s$child<-as.numeric(sample(2000))
+
+bg<-ggplot(fake, aes(x=child, y=dp)) + geom_point(aes(color=sunny)) + geom_smooth(method="lm")  
+#bh<-hist(fake$dp)
+#grid.arrange(bg,bh, ncol=1, nrow=2)
+eg<-ggplot(fake.e, aes(x=child.e, y=dp.e)) + geom_point(aes(color=sunny.e)) + geom_smooth(method="lm") 
+#eh<-hist(fake.e$dp.e)
+#grid.arrange(eg,eh, ncol=1, nrow=2)
+sg<-ggplot(fake.s, aes(x=child.s, y=dp.s)) + geom_point(aes(color=sunny.s)) + geom_smooth(method="lm")      
+#sh<-hist(fake.s$dp.s)
+#grid.arrange(sg,sh, ncol=1, nrow=2)
+grid.arrange(bg,eg,sg, ncol=3, nrow=1)
+
+
+
