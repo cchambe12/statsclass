@@ -124,6 +124,7 @@ display(m2)
 predict_model <- lm(mom_age~kid_score, data = available_data)
 
 full_data$Predicted_Mom_Age[full_data$Response == 0] <- predict(predict_model, data.frame(kid_score = full_data$kid_score[full_data$Response == 0]))
+full_data$Predicted_Mom_Age[full_data$Response == 0] <-  sapply(full_data$Predicted_Mom_Age[full_data$Response == 0], function(x) x + rnorm(1, mean = 0, sd = sd(available_data$mom_age)) ) ## Add normal skew for random imputation
 full_data$Predicted_Mom_Age[full_data$Response == 1] <- full_data$mom_age[full_data$Response == 1]
 
 print("Available Data")
@@ -147,9 +148,9 @@ plot(kid_score ~ Predicted_Mom_Age, data = full_data, pch = 16)
 abline(m3, col = "cornflowerblue")
 
 ## The original model fit is terrible (R2 = 0), as can be seen in the left-hand figure. Thus when we predict mom's age from 
-## child's test scores, all the ages fall between 22 1/2 and 23 1/2, leaving an articfact in the middle of our plot.
-## When we impute th emissing data, we retain the uncertainty in our estimates that we had in the subsetted data, but our
-## intercept drops and our slope rises in comparison to both the subsetted data and the actual data. 
+## child's test scores, all the ages fall between 22 1/2 and 23 1/2. However, when we add random noise that matches the mom_age
+## distribution, we have a fairly similar output to the full dataset. 
+## When we impute the missing data, we come much closer to the predictions from the full dataset.  
 
 
 
