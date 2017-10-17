@@ -17,8 +17,6 @@ wd <- "/Users/Meghs/Documents/BioStats/ARM_Data/child.iq/"
 setwd(wd)
 full_data <- read.dta("kidiq.dta")
 
-
-
 ##############################
 ## 13.6 #3
 ##############################
@@ -94,7 +92,7 @@ n <- (p*(1-p)) * (2.8/(p-p_control))^2
 
 full_data$Response_Probability <- (full_data$mom_age/max(full_data$mom_age)) * 0.65 ## Pick probabilties that increase with mom's age and scale so half data is missing
 full_data$Response <- sapply(full_data$Response_Probability,function(x) rbinom(1, 1, prob = x) ) ## Random generate which respond and which don't
-available_data <- available_data[available_data$Response == 1,] ## keep only responders
+available_data <- full_data[full_data$Response == 1,] ## keep only responders
 
 ## (b) Perform the regression of x on y (that is, with y as predictor and x as outcome), using complete-case analysis
 ##    (that is, using only the data fro which both variables are observed) and show that it is consistent with the 
@@ -127,7 +125,7 @@ predict_model <- lm(mom_age~kid_score, data = available_data)
 
 full_data$Predicted_Mom_Age[full_data$Response == 0] <- predict(predict_model, data.frame(kid_score = full_data$kid_score[full_data$Response == 0]))
 full_data$Predicted_Mom_Age[full_data$Response == 1] <- full_data$mom_age[full_data$Response == 1]
-  
+
 print("Available Data")
 m1 <- lm(kid_score ~ mom_age, data = available_data)
 display(m1)
