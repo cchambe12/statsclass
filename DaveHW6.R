@@ -23,14 +23,12 @@ require(plyr)
 
 n80Perc <- function(p){
   #Find 80% power sample size
-  # n=(2.8*.5/(P-P0))^2
-  #Or n=P(1-P)(2.8/(P-P0))^2
-  nRough <- (2.8*.5/(p-0))^2
+  #n=P(1-P)(2.8/(P-P0))^2
   nExact <- p*(1-p)*(2.8/(p-0))^2
   
   #Use conservative estimate, SE=.5/sqrt(n)
   #So n = (.5/SE)^2
-  n <- c(nRough,nExact)
+  n <- c(nExact)
   return(n)
 }
 
